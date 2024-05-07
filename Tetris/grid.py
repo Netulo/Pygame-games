@@ -1,10 +1,12 @@
 import pygame
 from colors import Colors
+from blocks import AngelBlock
 
 class Grid:
     def __init__(self):
         self.num_rows = 20
         self.num_cols = 10
+        self.preview_grid_size = 4
         self.cell_size = 30
         self.grid = [[0 for j in range(self.num_cols)] for i in range(self.num_rows)]
         self.colors = Colors.get_cell_colors()
@@ -43,10 +45,10 @@ class Grid:
             self.grid[row+num_rows][column] = self.grid[row][column]
             self.grid[row][column] = 0
             
-    def clear_full_rows(self):
+    def clear_full_rows(self, block):
         completed = 0
         for row in range(self.num_rows-1, 0, -1):
-            if self.is_row_full(row):
+            if self.is_row_full(row) or 8 in self.grid[row]:
                 self.clear_row(row)
                 completed += 1
             elif completed > 0:

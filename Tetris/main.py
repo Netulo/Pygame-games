@@ -1,16 +1,17 @@
 import pygame
 from game import Game
 
-screen = pygame.display.set_mode((300, 600))
+screen = pygame.display.set_mode((600, 600))
 pygame.display.set_caption("Tetris")
 clock = pygame.time.Clock()
+
 
 dark_blue = (44, 44, 127)
 
 game = Game()
 
 GAME_UPDATE = pygame.USEREVENT
-pygame.time.set_timer(GAME_UPDATE, 100)
+pygame.time.set_timer(GAME_UPDATE, 200)
 
 while True:
     for event in pygame.event.get():
@@ -23,7 +24,7 @@ while True:
                 game.move_right()
             elif event.key == pygame.K_DOWN and game.game_over == False:
                 game.move_down()
-            elif event.key == pygame.K_UP and game.game_over == False:
+            elif event.key == pygame.K_SPACE and game.game_over == False:
                 game.rotate()
             elif game.game_over == True:
                 game.game_over = False

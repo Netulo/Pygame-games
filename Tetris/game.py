@@ -1,7 +1,11 @@
 import random
+import pygame
+import json
 
 from grid import Grid
 from blocks import *
+
+pygame.font.init()
 
 class Game:
     def __init__(self):
@@ -9,13 +13,28 @@ class Game:
         self.blocks = [IBlock(), JBlock(), LBlock(), OBlock(), SBlock(), TBlock(), ZBlock()]
         self.current_block = self.get_random_block()
         self.game_over = False
+        self.font = pygame.font.SysFont('Comic Sans MS', 30)
+        self.score = 0
+        self.high_score = json.loads(open('Tetris/data.json', 'r').read())
+        self.next_block = self.get_random_block()
         
     def reset(self):
         self.grid.reset()
+        self.high_score_update()
+        file = open('Tetris/data.json', 'r')
+        self.high_score = json.loads(file.read())
+        self.score = 0
+        file.close()
+    
+    def high_score_update(self):
+        if self.score >= self.high_score:
+            file = open('Tetris/data.json', 'w')
+            file.write(json.dumps(self.score))
+            file.close()
         
     def get_random_block(self):
         if len(self.blocks) == 0:
-            self.blocks = [IBlock(), JBlock(), LBlock(), OBlock(), SBlock(), TBlock(), ZBlock()]
+            self.blocks = [IBlock(), JBlock(), LBlock(), OBlock(), SBlock(), TBlock(), ZBlock(), AngelBlock()]
         block = random.choice(self.blocks)
         self.blocks.remove(block)
         return block
@@ -23,7 +42,17 @@ class Game:
     def draw(self, screen):
         self.grid.draw(screen)
         self.current_block.draw(screen)
+        self.draw_score(screen)
+    
+    def draw_score(self, screen):
+        text_surface = self.font.render("Score: " + str(self.score), False, (0, 0, 0))
+        screen.blit(text_surface, (325,100))
+        text_surface = self.font.render("High Score: " + str(self.high_score), False, (0, 0, 0))
+        screen.blit(text_surface, (325,75))
         
+    # def draw_next_block(self):
+        
+    
     def move_left(self):
         self.current_block.move(0, -1)
         if self.block_inside() == False or self.block_fits() == False:
@@ -44,9 +73,15 @@ class Game:
         tiles = self.current_block.get_cell_positions()
         for position in tiles:
             self.grid.grid[position.row][position.column] = self.current_block.id
-        self.next_block = self.get_random_block()
+        
+        completed = self.grid.clear_full_rows(self.current_block)
+        if completed > 0:
+            self.score += completed
+        if self.score > self.high_score:
+            self.high_score = self.score
+            
         self.current_block = self.next_block
-        self.grid.clear_full_rows()
+        self.next_block = self.get_random_block()
         if self.block_fits() == False:
             self.game_over = True
         
