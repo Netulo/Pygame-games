@@ -1,7 +1,7 @@
 import pygame
 from game import Game
 
-screen = pygame.display.set_mode((600, 600))
+screen = pygame.display.set_mode((550, 600))
 pygame.display.set_caption("Tetris")
 clock = pygame.time.Clock()
 

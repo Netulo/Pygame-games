@@ -41,7 +41,16 @@ class Game:
     
     def draw(self, screen):
         self.grid.draw(screen)
-        self.current_block.draw(screen)
+        self.current_block.draw(screen, 0, 0)
+        
+        if self.next_block.id == 3:
+            self.next_block.draw(screen, 270, 290)
+        elif self.next_block.id == 4:
+            self.next_block.draw(screen, 285, 280)
+        elif self.next_block.id == 8:
+            self.next_block.draw(screen, 300, 295)
+        else:
+            self.next_block.draw(screen, 285, 270)
         self.draw_score(screen)
     
     def draw_score(self, screen):
@@ -104,3 +113,6 @@ class Game:
             if self.grid.is_inside(tile.row, tile.column) == False:
                 return False
         return True
+    
+    # def draw_rect_for_score_and_block(self):
+        
