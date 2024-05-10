@@ -18,7 +18,8 @@ class Game:
         self.font = pygame.font.SysFont('Comic Sans MS', 30)
         self.score = 0
         self.leaderboard = Leaderboard().leaderboard_json
-        self.current_player = Leaderboard().current_player
+        # self.current_player = Leaderboard().current_player
+        self.current_player = ""
         self.high_score = Leaderboard().high_score
         self.next_block = self.get_random_block()
         
